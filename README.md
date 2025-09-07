@@ -1,5 +1,8 @@
 # 🛒 Grocery List dApp on Algorand
 
+<img src="image.png" height="500px" width="600px">
+https://lora.algokit.io/testnet/application/745461022
+
 ## 📌 Project Description
 This project is a **beginner-friendly decentralized application (dApp)** built on the **Algorand blockchain**.  
 It demonstrates how to build and deploy a simple **smart contract in TypeScript** that manages a grocery list on-chain.  

@@ -1,0 +1,185 @@
+#pragma version 10
+#pragma typetrack false
+
+// @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
+main:
+    intcblock 1 0
+    bytecblock "groceryList" 0x151f7c75 ""
+    txn ApplicationID
+    bnz main_after_if_else@2
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // key: "groceryList",
+    bytec_0 // "groceryList"
+    // smart_contracts/hello_world/contract.algo.ts:8
+    // initialValue: ""
+    bytec_2 // ""
+    // smart_contracts/hello_world/contract.algo.ts:6-9
+    // groceryList = GlobalState<string>({
+    //   key: "groceryList",
+    //   initialValue: ""
+    // })
+    app_global_put
+
+main_after_if_else@2:
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // export class GroceryList extends Contract {
+    txn NumAppArgs
+    bz main_bare_routing@10
+    pushbytess 0x5b99f3ea 0xdb4539cf 0x38622386 // method "AddItem(string,string)string", method "ClearList()string", method "GetList()string"
+    txna ApplicationArgs 0
+    match main_AddItem_route@5 main_ClearList_route@6 main_GetList_route@7
+
+main_after_if_else@14:
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // export class GroceryList extends Contract {
+    intc_1 // 0
+    return
+
+main_GetList_route@7:
+    // smart_contracts/hello_world/contract.algo.ts:28
+    // GetList(): string {
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    callsub GetList
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_ClearList_route@6:
+    // smart_contracts/hello_world/contract.algo.ts:22
+    // ClearList(): string {
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    callsub ClearList
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_AddItem_route@5:
+    // smart_contracts/hello_world/contract.algo.ts:12
+    // AddItem(item: string, quantity: string): string {
+    txn OnCompletion
+    !
+    assert // OnCompletion is not NoOp
+    txn ApplicationID
+    assert // can only call when not creating
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // export class GroceryList extends Contract {
+    txna ApplicationArgs 1
+    extract 2 0
+    txna ApplicationArgs 2
+    extract 2 0
+    // smart_contracts/hello_world/contract.algo.ts:12
+    // AddItem(item: string, quantity: string): string {
+    callsub AddItem
+    dup
+    len
+    itob
+    extract 6 2
+    swap
+    concat
+    bytec_1 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_0 // 1
+    return
+
+main_bare_routing@10:
+    // smart_contracts/hello_world/contract.algo.ts:4
+    // export class GroceryList extends Contract {
+    txn OnCompletion
+    bnz main_after_if_else@14
+    txn ApplicationID
+    !
+    assert // can only call when creating
+    intc_0 // 1
+    return
+
+
+// smart_contracts/hello_world/contract.algo.ts::GroceryList.AddItem(item: bytes, quantity: bytes) -> bytes:
+AddItem:
+    // smart_contracts/hello_world/contract.algo.ts:12
+    // AddItem(item: string, quantity: string): string {
+    proto 2 1
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // key: "groceryList",
+    intc_1 // 0
+    bytec_0 // "groceryList"
+    app_global_get_ex
+    assert // check GlobalState exists
+    // smart_contracts/hello_world/contract.algo.ts:15
+    // const newEntry = `${item} (${quantity}), `
+    frame_dig -2
+    pushbytes " ("
+    concat
+    frame_dig -1
+    concat
+    pushbytes "), "
+    concat
+    // smart_contracts/hello_world/contract.algo.ts:16
+    // this.groceryList.value = currentList + newEntry
+    concat
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // key: "groceryList",
+    bytec_0 // "groceryList"
+    // smart_contracts/hello_world/contract.algo.ts:16
+    // this.groceryList.value = currentList + newEntry
+    swap
+    app_global_put
+    // smart_contracts/hello_world/contract.algo.ts:18
+    // return item
+    frame_dig -2
+    retsub
+
+
+// smart_contracts/hello_world/contract.algo.ts::GroceryList.ClearList() -> bytes:
+ClearList:
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // key: "groceryList",
+    bytec_0 // "groceryList"
+    // smart_contracts/hello_world/contract.algo.ts:23
+    // this.groceryList.value = ""
+    bytec_2 // ""
+    app_global_put
+    // smart_contracts/hello_world/contract.algo.ts:24
+    // return "List cleared!"
+    pushbytes "List cleared!"
+    retsub
+
+
+// smart_contracts/hello_world/contract.algo.ts::GroceryList.GetList() -> bytes:
+GetList:
+    // smart_contracts/hello_world/contract.algo.ts:7
+    // key: "groceryList",
+    intc_1 // 0
+    bytec_0 // "groceryList"
+    app_global_get_ex
+    assert // check GlobalState exists
+    // smart_contracts/hello_world/contract.algo.ts:29
+    // return this.groceryList.value
+    retsub
